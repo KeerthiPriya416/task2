@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kanipakam Temple Ticket and Prasadam Booking</title>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Flexbox Layout for the page */
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            color: #4CAF50;
+        }
+
+        /* Form Styling */
+        .form-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .form-container h2 {
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 1rem;
+        }
+
+        .form-group input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .form-group input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .error {
+            color: red;
+            font-size: 0.9rem;
+        }
+
+        /* Ticket List Styling */
+        .ticket-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .ticket-item {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: calc(33% - 20px);
+        }
+
+        .ticket-item button {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .ticket-item button:hover {
+            background-color: darkred;
+        }
+
+        /* Image Gallery Styling */
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 40px;
+        }
+
+        .image-gallery img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .ticket-item {
+                width: calc(50% - 20px);
+            }
+
+            .form-container {
+                max-width: 90%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .ticket-item {
+                width: 100%;
+            }
+        }
+
+        /* Success Notification */
+        .notification {
+            display: none;
+            color: green;
+            font-size: 1.2rem;
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>Kanipakam Temple Ticket and Prasadam Booking</h1>
+            <p>Book your ticket and prasadam for a visit to the Kanipakam Temple online.</p>
+        </div>
+
+        <!-- Booking Form -->
+        <div class="form-container">
+            <h2>Book Your Ticket</h2>
+            <form id="ticketForm">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+                    <p class="error" id="nameError"></p>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                    <p class="error" id="emailError"></p>
+                </div>
+                <div class="form-group">
+                    <label for="date">Visit Date</label>
+                    <input type="date" id="date" name="date" required>
+                    <p class="error" id="dateError"></p>
+                </div>
+                <div class="form-group">
+                    <label for="ticketQuantity">Ticket Quantity</label>
+                    <input type="number" id="ticketQuantity" name="ticketQuantity" min="1" required>
+                    <p class="error" id="ticketQuantityError"></p>
+                </div>
+                <div class="form-group">
+                    <label for="prasadam">Prasadam (Optional)</label>
+                    <select id="prasadam" name="prasadam">
+                        <option value="None">None</option>
+                        <option value="Laddoo">Laddoo</option>
+                        <option value="Vada">Vada</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Book Ticket">
+                </div>
+            </form>
+            <div id="successMessage" class="notification">
+                Your ticket has been successfully booked!
+            </div>
+        </div>
+
+        <!-- Display Booked Tickets -->
+        <div class="ticket-list" id="ticketList"></div>
+
+        <!-- Image Gallery -->
+        <div class="image-gallery">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSU9pK5BOJk-MCY4Ys7eg7tRA1saHHTaJvunw&s" alt="Temple Image 1">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQY38FSOsxP2LX28cWE44Px--iTwmSRFulvmg&s" alt="Temple Image 2">
+        </div>
+    </div>
+
+    <script>
+        // JavaScript to handle form submission and validation
+
+        function validateForm() {
+            let isValid = true;
+
+            // Clear previous error messages
+            document.querySelectorAll('.error').forEach(error => error.textContent = '');
+
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const date = document.getElementById('date').value;
+            const ticketQuantity = document.getElementById('ticketQuantity').value;
+            const prasadam = document.getElementById('prasadam').value;
+
+            // Validate Name
+            if (name === '') {
+                document.getElementById('nameError').textContent = 'Name is required.';
+                isValid = false;
+            }
+
+            // Validate Email
+            const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+            if (!emailPattern.test(email)) {
+                document.getElementById('emailError').textContent = 'Please enter a valid email address.';
+                isValid = false;
+            }
+
+            // Validate Date
+            if (!date) {
+                document.getElementById('dateError').textContent = 'Please select a date.';
+                isValid = false;
+            }
+
+            // Validate Ticket Quantity
+            if (ticketQuantity <= 0 || isNaN(ticketQuantity)) {
+                document.getElementById('ticketQuantityError').textContent = 'Please enter a valid quantity.';
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        // Function to add ticket to the list
+        function addTicket(name, email, date, quantity, prasadam) {
+            const ticketList = document.getElementById('ticketList');
+
+            const ticketItem = document.createElement('div');
+            ticketItem.classList.add('ticket-item');
+
+            ticketItem.innerHTML = `
+                <h3>Ticket for ${name}</h3>
+                <p>Email: ${email}</p>
+                <p>Visit Date: ${date}</p>
+                <p>Quantity: ${quantity}</p>
+                <p>Prasadam: ${prasadam}</p>
+                <button onclick="removeTicket(this)">Cancel Booking</button>
+            `;
+            ticketList.appendChild(ticketItem);
+        }
+
+        // Function to remove ticket from the list
+        function removeTicket(button) {
+            button.parentElement.remove();
+        }
+
+        // Handling form submission
+        document.getElementById('ticketForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            if (validateForm()) {
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const date = document.getElementById('date').value;
+                const ticketQuantity = document.getElementById('ticketQuantity').value;
+                const prasadam = document.getElementById('prasadam').value;
+
+                // Add ticket to list
+                addTicket(name, email, date, ticketQuantity, prasadam);
+
+                // Display success message
+                document.getElementById('successMessage').style.display = 'block';
+
+                // Reset form after submission
+                document.getElementById('ticketForm').reset();
+            }
+        });
+    </script>
+
+</body>
+
+</html>
